@@ -1,0 +1,33 @@
+* Wholesome Twitter Bot
+
+A simple Twitter bot written in Python that will randomely pick a follower of yours to send them wholesome words in order to brighten their day.
+
+** How it works
+The Wholesome Twitter Bot connects to Twitter API using your app credentials (defined in =config.py=). It then gathers the list of your followers and cache it in a local =FOLLOWER_CACHE= file. One follower is then randomly picked from that list. From the =WHOLESOME_CONTENT= a random line is extracted. A tweet is then built combining the Twitter screen name of the randomly picked follower and the random line selected. The =WHOLESOME_HASHTAG= hashtags are then added at the end of the tweet. Finally, the tweet is sent as a reply to the last tweet sent by the Wholesome Twitter bot, or to the tweet defined by =DEFAULT_ROOT_ID= tweet ID if it's the first time the bot is used.
+
+** Pre requisites
+- Python 3.X
+- [[https://github.com/bear/python-twitter][Python Twitter]]
+
+** Configuration
+Simply update the configuration file =config.py= with the relevant content.
+| key                     | content                                                                  |
+|-------------------------+--------------------------------------------------------------------------|
+| TWITAPI_CONSUMER_KEY    | [[https://developer.twitter.com/en/docs/basics/authentication/oauth-2-0/bearer-tokens][Twitter consumer key of your App]]                                         |
+| TWITAPI_CONSUMER_SECRET | [[https://developer.twitter.com/en/docs/basics/authentication/oauth-2-0/bearer-tokens][Twitter consumer secret of your App]]                                      |
+| TWITAPI_TOKEN_KEY       | [[https://developer.twitter.com/en/docs/basics/authentication/oauth-2-0/bearer-tokens][Twitter token key of your App]]                                            |
+| TWITAPI_TOKEN_SECRET    | [[https://developer.twitter.com/en/docs/basics/authentication/oauth-2-0/bearer-tokens][Twitter token secret of your App]]                                         |
+| TWITTER_ID              | [[http://gettwitterid.com/][Your Twitter ID]]                                                          |
+| DEFAULT_ROOT_ID         | ID of the first tweet of the wholesome thread                            |
+| WHOLESOME_HASHTAG       | Hashtag that will be automatically added to tweets                       |
+| FOLLOWER_CACHE          | Local file path where your follower list will be cached                  |
+| SAVE_FILE               | Local file path where the history of tweet will be saved                 |
+| WHOLESOME_CONTENT       | Path of the local file that contains the wholesome content of the tweets |
+
+** FAQ
+- How to add / modify the content of the tweets?
+  - Simple modify the content of =wholesome-content.txt= text file with your own wholesome content.
+- Why is there no exclusion file?
+  - Excluding some of your followers from the possibility to receive wholesome content is not fair. Even your greedy bank deserves to have a nice day.
+- What if I use the Wholesome Twitter Bot to send a bunch of insults to someone else's followers?
+  - Well, brother, it won't be good for your karma and I'm sorry for you. Really. Also I can't be held responsible for what others do with this bot.
