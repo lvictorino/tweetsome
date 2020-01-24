@@ -8,9 +8,14 @@ import json
 import datetime
 import config
 
+def file_path(desired_file):
+    script_dir = os.path.dirname(__file__)
+    path = os.path.join(script_dir, desired_file)
+    return path
+
 print ( "Gathering saved data..." )
 try:
-    with open(config.SAVE_FILE, 'r') as f:
+    with open(file_path(config.SAVE_FILE), 'r') as f:
         saved_data = json.load(f)
     print ( "Success." )
 except:
@@ -22,7 +27,7 @@ except:
 print ( "Gathering wholesome content..." )
 try:
     content = []
-    with open(config.WHOLESOME_CONTENT, 'r') as f:
+    with open(file_path(config.WHOLESOME_CONTENT), 'r') as f:
         content = f.read().splitlines()
         tweet_content = random.choice(content) + " " + config.WHOLESOME_HASHTAG
         print ( "Success." )
@@ -40,7 +45,7 @@ try:
 
     print ( "Success.\nUpdating follower cache..." )
     followers = api.GetFollowerIDs(user_id=config.TWITTER_ID)
-    with open(config.FOLLOWER_CACHE, 'wb') as f:
+    with open(file_path(config.FOLLOWER_CACHE), 'wb') as f:
         pickle.dump(followers, f, protocol=pickle.HIGHEST_PROTOCOL)
     print ( "Success: " + str(len(followers)) + " followers.")
 except:
@@ -48,7 +53,7 @@ except:
 
 print ( "Getting cache..." )
 try:
-    with open(config.FOLLOWER_CACHE, 'rb') as f:
+    with open(file_path(config.FOLLOWER_CACHE), 'rb') as f:
         followers_load = pickle.load(f)
 except:
     print ( "Cache not found." )
@@ -89,7 +94,7 @@ except:
 print ( "Saving data..." )
 try:
     saved_data['time'] = str(datetime.datetime.now())
-    with open(config.SAVE_FILE, 'w') as f:
+    with open(file_path(config.SAVE_FILE), 'w') as f:
         json.dump(saved_data, f)
     print ( "Success." )
 except:
