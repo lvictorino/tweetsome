@@ -1,6 +1,5 @@
 import twitter
 import random
-import re
 import pickle
 import os
 import sys
@@ -20,7 +19,7 @@ try:
     with open(file_path(config.SAVE_FILE), "r") as f:
         saved_data = json.load(f)
     print("Success.")
-except:
+except (FileNotFoundError, json.decoder.JSONDecodeError):
     print("None were found. Using default data.")
     saved_data = {}
     saved_data["picked"] = []
@@ -33,7 +32,7 @@ try:
         content = f.read().splitlines()
         tweet_content = random.choice(content) + " " + config.WHOLESOME_HASHTAG
         print("Success.")
-except:
+except FileNotFoundError:
     print("Unable to retrieve wholesome content.")
     print("Shutting down.")
     sys.exit(1)
@@ -52,14 +51,14 @@ try:
     with open(file_path(config.FOLLOWER_CACHE), "wb") as f:
         pickle.dump(followers, f, protocol=pickle.HIGHEST_PROTOCOL)
     print("Success: " + str(len(followers)) + " followers.")
-except:
+except twitter.error.TwitterError:
     print("Unable to connect.")
 
 print("Getting cache...")
 try:
     with open(file_path(config.FOLLOWER_CACHE), "rb") as f:
         followers_load = pickle.load(f)
-except:
+except (FileNotFoundError, EOFError):
     print("Cache not found.")
     print("Shutting down.")
     sys.exit(1)
@@ -90,7 +89,7 @@ try:
     new_tweet = api.PostUpdate(tweet, in_reply_to_status_id=saved_data["last_tweet_id"])
     saved_data["last_tweet_id"] = new_tweet.id_str
     print("Success.")
-except:
+except twitter.error.TwitterError:
     print("Unable to send a tweet.")
     print("Shutting down.")
     sys.exit(1)
@@ -101,7 +100,7 @@ try:
     with open(file_path(config.SAVE_FILE), "w") as f:
         json.dump(saved_data, f)
     print("Success.")
-except:
+except (FileNotFoundError, json.decoder.JSONDecodeError):
     print("Unable to save data.")
     print("Shutting down.")
     sys.exit(1)
