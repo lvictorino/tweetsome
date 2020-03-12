@@ -37,17 +37,17 @@ except FileNotFoundError:
     print("Shutting down.")
     sys.exit(1)
 
+api = twitter.Api(
+    consumer_key=config.TWITAPI_CONSUMER_KEY,
+    consumer_secret=config.TWITAPI_CONSUMER_SECRET,
+    access_token_key=config.TWITAPI_TOKEN_KEY,
+    access_token_secret=config.TWITAPI_TOKEN_SECRET,
+)
+
 print("Connecting to Twitter API...")
 try:
-    api = twitter.Api(
-        consumer_key=config.TWITAPI_CONSUMER_KEY,
-        consumer_secret=config.TWITAPI_CONSUMER_SECRET,
-        access_token_key=config.TWITAPI_TOKEN_KEY,
-        access_token_secret=config.TWITAPI_TOKEN_SECRET,
-    )
-
-    print("Success.\nUpdating follower cache...")
     followers = api.GetFollowerIDs(user_id=config.TWITTER_ID)
+    print("Success.\nUpdating follower cache...")
     with open(file_path(config.FOLLOWER_CACHE), "wb") as f:
         pickle.dump(followers, f, protocol=pickle.HIGHEST_PROTOCOL)
     print("Success: " + str(len(followers)) + " followers.")
