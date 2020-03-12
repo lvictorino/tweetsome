@@ -30,7 +30,8 @@ try:
     content = []
     with open(file_path(config.WHOLESOME_CONTENT), "r") as f:
         content = f.read().splitlines()
-        tweet_content = random.choice(content) + " " + config.WHOLESOME_HASHTAG
+        random_tweet = random.choice(content)
+        tweet_content = f"{random_tweet} {config.WHOLESOME_CONTENT}"
         print("Success.")
 except FileNotFoundError:
     print("Unable to retrieve wholesome content.")
@@ -50,7 +51,7 @@ try:
     print("Success.\nUpdating follower cache...")
     with open(file_path(config.FOLLOWER_CACHE), "wb") as f:
         pickle.dump(followers, f, protocol=pickle.HIGHEST_PROTOCOL)
-    print("Success: " + str(len(followers)) + " followers.")
+    print("Success:", len(followers), "followers.")
 except twitter.error.TwitterError:
     print("Unable to connect.")
 
@@ -68,7 +69,7 @@ picked_id = None
 while len(followers_load) != 0 and picked_id is None:
     follower_id = random.choice(followers_load)
     picked_id = str(follower_id)
-    print("Picking user id: " + picked_id + "...")
+    print("Picking user id:", picked_id, "...")
     if picked_id in saved_data["picked"]:
         print("...discarded.")
         followers_load.remove(int(picked_id))
@@ -82,9 +83,9 @@ if len(followers_load) == 0:
 try:
     saved_data["picked"].append(picked_id)
     picked_user = api.GetUser(user_id=picked_id)
-    print("Getting user name: @" + picked_user.screen_name)
-    tweet = "@" + picked_user.screen_name + " " + tweet_content
-    print("Building tweet: " + tweet)
+    print(f"Getting user name: @{picked_user.screen_name}")
+    tweet = f"@{picked_user.screen_name} {tweet_content}"
+    print("Building tweet:", tweet)
     print("Sending tweet...")
     new_tweet = api.PostUpdate(tweet, in_reply_to_status_id=saved_data["last_tweet_id"])
     saved_data["last_tweet_id"] = new_tweet.id_str
