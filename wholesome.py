@@ -64,21 +64,15 @@ except (FileNotFoundError, EOFError):
     print("Shutting down.")
     sys.exit(1)
 
-print("Picking a follower:")
-picked_id = None
-while len(followers_load) != 0 and picked_id is None:
-    follower_id = random.choice(followers_load)
-    picked_id = str(follower_id)
-    print("Picking user id:", picked_id, "...")
-    if picked_id in saved_data["picked"]:
-        print("...discarded.")
-        followers_load.remove(int(picked_id))
-        picked_id = None
+remaining_followers = set(followers_load) - set(saved_data["picked"])
 
-if len(followers_load) == 0:
+if not remaining_followers:
     print("All followers have already received the wholesomeness they deserved.")
     print("Shutting down.")
     sys.exit(0)
+
+picked_id = random.choice(followers_load)
+print("Picked follower id:", picked_id)
 
 try:
     saved_data["picked"].append(picked_id)
